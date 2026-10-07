@@ -1,3 +1,4 @@
+
 {"name":"quant-terminal","private":true,"scripts":{"dev":"next dev","build":"next build"},
 "dependencies":{"next":"^14","react":"^18","react-dom":"^18","framer-motion":"^11","d3":"^7"},
 "devDependencies":{"tailwindcss":"^3","postcss":"^8","autoprefixer":"^10","typescript":"^5","@types/d3":"^7","@types/react":"^18","@types/node":"^20"}}
