@@ -1,9 +1,10 @@
 'use client';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { useState, type ReactNode } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
+import { useStore } from '@/lib/store';
 
-const NAV = [['Command', '/'], ['Alpha', '/alpha'], ['Sentiment', '/sentiment'], ['Risk', '/risk']];
+const NAV = [['Command', '/'], ['Alpha', '/alpha'], ['Sentiment', '/sentiment'], ['Risk', '/risk'], ['Profile', '/profile']];
 
 export function TopBar() {
   return (
@@ -17,7 +18,7 @@ export function TopBar() {
       <nav className="relative flex items-center gap-4 md:gap-8 px-4 h-12 text-xs">
         <span className="text-[var(--cyan)] font-bold tracking-widest">QUANT/HUD</span>
         {NAV.map(([n, h]) => <Link key={h} href={h} className="text-[#9aa0b2] hover:text-white transition-colors">{n}</Link>)}
-        <span className="ml-auto text-[var(--green)]">● breadth 0.68</span>
+        <Bal />
       </nav>
     </motion.header>
   );
@@ -39,22 +40,36 @@ export function BottomBar() {
   );
 }
 
-/** Panel that slides a translucent drawer out on hover, no click needed. */
+/** Panel with a hover-triggered drawer. It opens from a small edge tab (not from the whole panel),
+ *  so sliders, buttons and chart drags underneath are never covered by accident. */
 export function HoverPanel({ title, drawer, children }: { title: string; drawer: ReactNode; children: ReactNode }) {
   const [open, setOpen] = useState(false);
+  const t = useRef<ReturnType<typeof setTimeout>>();
+  const go = (v: boolean, ms = 0) => { clearTimeout(t.current); t.current = setTimeout(() => setOpen(v), ms); };
   return (
-    <div className="panel h-full" data-active={open} onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+    <div className="panel h-full" data-active={open} onMouseLeave={() => go(false, 150)}>
       <div className="ttl">{title}</div>
       {children}
+      {!open && (
+        <div onMouseEnter={() => go(true, 120)} onMouseLeave={() => go(false)}
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 cursor-pointer select-none px-1 py-3 text-[9px] tracking-widest text-[var(--cyan)] border border-r-0 border-[var(--cyan)] bg-[#050507cc] rounded-l [writing-mode:vertical-rl]">
+          DETAILS
+        </div>
+      )}
       <AnimatePresence>
         {open && (
-          <motion.aside initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
-            transition={{ type: 'tween', duration: 0.25 }}
-            className="absolute right-0 top-0 h-full w-[46%] max-w-xs p-4 text-xs border-l border-[var(--cyan)] bg-[#050507d9] backdrop-blur-md">
+          <motion.aside initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} transition={{ type: 'tween', duration: 0.25 }}
+            onMouseEnter={() => go(true)}
+            className="absolute right-0 top-0 z-20 h-full w-[40%] max-w-[16rem] p-4 text-xs border-l border-[var(--cyan)] bg-[#050507e6] backdrop-blur-md overflow-y-auto">
             {drawer}
           </motion.aside>
         )}
       </AnimatePresence>
     </div>
   );
+}
+
+function Bal() {
+  const { value } = useStore();
+  return <Link href="/profile" className="ml-auto text-[var(--green)]">${value.toLocaleString('en-US', { maximumFractionDigits: 2 })}</Link>;
 }
