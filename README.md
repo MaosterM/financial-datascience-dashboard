@@ -5,13 +5,13 @@ FX forecasts that are evaluated honestly against a random-walk baseline.
 
 ## Status
 
-This project is being rebuilt from scratch and is at **Phase 0 (setup)**.
-There is no application code yet. The repository currently contains only
-the project skeleton and configuration files.
+This project is being rebuilt from scratch and is at **Phase 1 (server
+skeleton)**. The Express server runs and exposes one route, `GET /health`.
+There is no database, client or ML service yet.
 
 ## Planned stack
 
-Nothing in this list is built yet.
+So far only the Node.js and Express part of the server is built; everything else is planned.
 
 - **Client:** Angular, TypeScript, RxJS, lightweight-charts, D3
 - **Server:** Node.js, Express, MongoDB with Mongoose, WebSockets
@@ -23,7 +23,7 @@ Nothing in this list is built yet.
 | Path | Purpose |
 |---|---|
 | `client/` | Angular frontend (planned, empty) |
-| `server/` | Express REST API and WebSocket server (planned, empty) |
+| `server/` | Express server with a `GET /health` route |
 | `ml/` | FastAPI service for models and backtests (planned, empty) |
 | `.env.example` | Names of the environment variables the server will need |
 
@@ -32,11 +32,30 @@ Nothing in this list is built yet.
 ```bash
 git clone https://github.com/MaosterM/financial-datascience-dashboard.git
 cd financial-datascience-dashboard
-cp .env.example .env
 ```
 
-`.env` holds real values and is ignored by git. Never commit it.
-There is nothing to run yet. Run instructions will be added in Phase 1.
+Install the server's dependencies and start it in watch mode:
+
+```bash
+cd server
+npm install
+npm run dev
+```
+
+The server listens on port 3000. Check it from a second terminal:
+
+```bash
+curl http://localhost:3000/health
+```
+
+To use another port, set `PORT` for that one command (Bash syntax):
+
+```bash
+PORT=4000 npm run dev
+```
+
+The server does not read `.env` yet. `.env.example` lists the variables it
+will need once the database is added. Never commit a real `.env`.
 
 ## Disclaimer
 
