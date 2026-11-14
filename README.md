@@ -48,6 +48,9 @@ The server listens on port 3000. Check it from a second terminal:
 curl http://localhost:3000/health
 ```
 
+In Windows PowerShell, use `curl.exe` instead. There, `curl` is an alias
+for `Invoke-WebRequest` and shows a security prompt.
+
 To use another port, set `PORT` for that one command (Bash syntax):
 
 ```bash
