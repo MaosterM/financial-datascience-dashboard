@@ -60,6 +60,17 @@ PORT=4000 npm run dev
 The server does not read `.env` yet. `.env.example` lists the variables it
 will need once the database is added. Never commit a real `.env`.
 
+## Development
+
+Run these from `server/`:
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | Start the server in watch mode |
+| `npm run format` | Rewrite files in Prettier's style |
+| `npm run format:check` | Report off-style files without changing them |
+| `npm run lint` | Report likely mistakes, such as unused variables |
+
 ## Disclaimer
 
 Forecasts in this project are learning tools. They are not financial
